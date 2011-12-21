@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+<project name="HelloB2.deploy" default="deploy" basedir=".">
+    <target name="deploy"  description="Deploy Project">
+        <war destfile="HelloB2.war"></war>
+    </target>
+</project>
+-->
+
+<project name="HelloB2" basedir="." default="build">
+
+  <!-- ====================================================================== -->
+  <!-- =========================== deploy targets =========================== -->
+  <!-- ====================================================================== -->
+
+  <target name="deploy" depends="init, -build, -set-deploy-url"
+          description="Dynamically deploys all changes to the building block.">
+    <get src="${deploy.url}" dest="${distrib.dir}/deploy.out"/>
+  </target>
+
+  <target name="deploy-available" depends="init, -build, -set-deploy-url"
+          description="Dynamically deploys all changes and makes the building block available within courses/organizations.">
+    <get src="${deploy.url}&amp;available=true" dest="${distrib.dir}/deploy.out"/>
+  </target>
+
+  <target name="deploy-clean" depends="init, -build, -set-deploy-url"
+          description="Refreshes the currently installed building block.">
+    <get src="${deploy.url}&amp;clean=true" dest="${distrib.dir}/deploy.out"/>
+  </target>
+
+  <target name="deploy-clean-available" depends="init, -build, -set-deploy-url"
+          description="Dynamically deploys all changes after removing the current building block and makes it available within courses/organizations.">
+    <get src="${deploy.url}&amp;clean=true&amp;available=true" dest="${distrib.dir}/deploy.out"/>
+  </target>
+
+  <!-- ====================================================================== -->
+  <!-- ========================= core build targets ========================= -->
+  <!-- ====================================================================== -->
+
+  <target name="build" depends="init, -build" description="Generates the Building Block distribution file (WAR)."/>
+  <target name="-build" depends="-compile, -prepare, -compile-jsps">
+    <jar jarfile="${warfile}" compress="true" index="true">
+      <manifest>
+        <attribute name="${b2.version.name}" value="${b2.version.number}"/>
+      </manifest>
+      <fileset dir="${staging.dir}"/>Fo
+    </jar>
+    <antcall target="hook-post-build"/>
+  </target>
+
+  <target name="compile" depends="init, -compile" description="Compiles all Java source files."/>
+  <target name="-compile">
+    <mkdir dir="${staging.dir}/WEB-INF/classes"/>
+    <mkdir dir="lib"/>
+    <javac srcdir="src" destdir="${staging.dir}/WEB-INF/classes" debug="true" deprecation="true">
+      <classpath>
+        <fileset dir="lib"                       includes="*.jar"/>
+        <fileset dir="${tomcat.home}/common/lib" includes="*.jar"/>
+        <!-- TODO: include optionally defined B2 classpath?
+             Reason not to: any unusual locations would not be available at runtime anyway.
+          -->
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="-prepare">
+    <mkdir dir="${staging.dir}/WEB-INF"/>
+    <mkdir dir="${staging.dir}/WEB-INF/classes"/>
+    <mkdir dir="${staging.dir}/WEB-INF/config"/>
+    <mkdir dir="${staging.dir}/WEB-INF/lib"/>
+
+    <copy todir="${staging.dir}/WEB-INF">       <fileset dir="etc"/>   </copy>
+    <copy todir="${staging.dir}/WEB-INF/config"><fileset dir="config"/></copy>
+    <copy todir="${staging.dir}/WEB-INF/lib">   <fileset dir="lib"/>   </copy>
+
+    <!-- Don't fail on errors because not all B2 might have .jsp files -->
+    <copy todir="${staging.dir}" failonerror="false"><fileset dir="web"/></copy>
+
+    <antcall target="hook-post-prepare"/>
+  </target>
+
+  <!-- Override this target to perform B2-specific actions after the "build" target -->
+  <target name="hook-post-build"/>
+
+  <!-- Override this target to perform B2-specific actions after the "prepare" target -->
+  <target name="hook-post-prepare"/>
+
+  <!-- ====================================================================== -->
+  <!-- ====================== jsp compilation targets ======================= -->
+  <!-- ====================================================================== -->
+
+  <target name="-compile-jsps" depends="-jspc, -jsp-compile"/>
+
+  <!-- Compile JSP pages to .java files -->
+  <target name="-jspc" if="b2.contains.jsp" depends="-jspc-init">
+    <!-- Uncomment to ensure that obsolete .jsp files will properly disappear from build dir,
+         at expense of always compiling all .jsp files.
+    <delete failonerror="false"><fileset dir="${staging.dir}" includes="**/*_jsp*.java"/></delete>
+      -->
+    <mkdir dir="${staging.dir}"/>
+    <jasper2 validateXml="false"
+             uriroot="${staging.dir}"
+             webXmlFragment="${staging.dir}/WEB-INF/generated_web.xml"
+             outputDir="${staging.dir}/WEB-INF/src" />
+  </target>
+
+
+  <!-- Compile the generated .java files -->
+  <target name="-jsp-compile" if="b2.contains.jsp">
+    <!-- Uncomment to ensure that obsolete .jsp files will properly disappear from build dir,
+         at expense of always compiling all .jsp files.
+    <delete failonerror="false"><fileset dir="${staging.dir}/WEB-INF/classes" includes="**/*_jsp*.class"/></delete>
+      -->
+    <mkdir dir="${staging.dir}/WEB-INF/classes"/>
+    <mkdir dir="${staging.dir}/WEB-INF/lib"/>
+
+    <javac srcdir="${staging.dir}/WEB-INF/src"
+           destdir="${staging.dir}/WEB-INF/classes"
+           debug="true" deprecation="true"
+           excludes="**/*.smap">
+      <classpath>
+        <pathelement location="${staging.dir}/WEB-INF/classes"/>
+        <fileset dir="${staging.dir}/WEB-INF/lib" includes="*.jar"/>
+        <fileset dir="${tomcat.home}/common/lib"  includes="*.jar"/>
+      </classpath>
+      <exclude name="tags/**" />
+    </javac>
+  </target>
+
+  <target name="-jspc-init" if="b2.contains.jsp">
+    <echo file="${distrib.dir}/log4j.properties">
+log4j.rootLogger=INFO, JSPC
+log4j.appender.JSPC=org.apache.log4j.ConsoleAppender
+log4j.appender.JSPC.layout=org.apache.log4j.PatternLayout
+log4j.appender.JSPC.layout.ConversionPattern=%p %t %c - %m%n
+log4j.org.apache.jasper=INFO, JSPC
+    </echo>
+    <taskdef classname="org.apache.jasper.JspC" name="jasper2">
+      <classpath id="jspc.classpath">
+        <pathelement location="${java.home}/../lib/tools.jar"/>
+        <fileset dir="${tomcat.home}/bin"        includes="*.jar"/>
+        <fileset dir="${tomcat.home}/server/lib" includes="*.jar"/>
+        <fileset dir="${tomcat.home}/common/lib" includes="*.jar"/>
+        <pathelement location="${distrib.dir}"/>
+      </classpath>
+    </taskdef>
+  </target>
+
+  <!-- ====================================================================== -->
+  <!-- ==================== initialization/setup targets ==================== -->
+  <!-- ====================================================================== -->
+
+  <target name="init" depends="-init, -set-bb-home, -set-bb-host, hook-init">
+    <property name="tomcat.home" location="${bb.home}/apps/tomcat"/>
+
+    <!-- Figure out if the Building Block contains any JSP files -->
+    <length property="jsp.files.count">
+      <fileset dir="." includes="**/*.jsp"/>
+    </length>
+    <condition property="b2.contains.jsp">
+      <not><equals arg1="${jsp.files.count}" arg2="0"/></not>
+    </condition>
+
+    <property name="b2.version.name"   value="GenericB2-Version"/>
+    <property name="b2.version.number" value="0.0.1"/>
+
+    <mkdir dir="${distrib.dir}"/>
+  </target>
+
+  <!-- Override this target to set B2 specific properties -->
+  <target name="hook-init"/>
+
+  <target name="-init">
+    <property name="distrib.dir" location="_distrib_"/>
+    <property name="staging.dir" location="${distrib.dir}/${ant.project.name}"/>
+    <property name="warfile"     location="${staging.dir}.war"/>
+
+    <property environment="env"/>
+  </target>
+
+  <target name="-set-bb-home" depends="-set-bb-home-env, -set-bb-home-default"/>
+
+  <target name="-set-bb-home-env" if="env.BB_HOME">
+    <property name="bb.home" location="${env.BB_HOME}"/>
+    <echo>Using BB_HOME environment value: ${bb.home}</echo>
+  </target>
+
+  <target name="-set-bb-home-default" unless="env.BB_HOME">
+    <!-- TODO: Unix environments -->
+    <property name="bb.home" location="c:/blackboard"/>
+    <echo>Using default BB_HOME value: ${bb.home}</echo>
+  </target>
+
+  <target name="-set-bb-host" depends="-set-bb-host-env, -set-bb-host-default"/>
+
+  <target name="-set-bb-host-env" if="env.BB_HOST">
+    <property name="bb.host" value="${env.BB_HOST}"/>
+    <echo>Using BB_HOST enironment value: ${bb.host}</echo>
+  </target>
+
+  <target name="-set-bb-host-default" unless="env.BB_HOST">
+    <property name="bb.host" value="localhost"/>
+    <echo>Using default BB_HOST value: ${bb.host}</echo>
+  </target>
+
+  <target name="-set-deploy-url">
+    <!-- TODO: does not work with Ant 1.6
+    <makeurl property="warfile.url" file="${warfile}"/>
+    -->
+    <property name="deploy.url" value="http://${bb.host}/webapps/bb-starting-block-bb_bb60/execute/install?fileName=${warfile}"/>
+  </target>
+
+  <!-- ====================================================================== -->
+  <!-- =========================== clean targets ============================ -->
+  <!-- ====================================================================== -->
+
+  <target name="clean" depends="-init" description="Removes all build generated files.">
+    <delete dir="${distrib.dir}"/>
+  </target>
+
+</project>

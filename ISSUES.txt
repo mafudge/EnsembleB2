@@ -1,0 +1,9 @@
+
+
+FIXED:
+1.0.11 => Fixed issue "Unexpected EOF in Prolog error" on institutional content with no data. Fixed SAX Parser error on bad API call. 
+1.0.10 => Fixed: plugin issue, institutional content not displaying issue, and better feedback on search progress.
+1.0.9 => Official 1st release 
+1.0.8 => Fixed issue when searching for more than one term in the query string eg. "Ensemble Video" Sanitized the input
+1.0.7 => Breaking change in ensemble 3.2 API, corrected in Building Block
+1.0.6 => First Release

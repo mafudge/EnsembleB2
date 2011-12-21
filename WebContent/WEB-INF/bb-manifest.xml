@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<manifest>
+  <!-- core extension information -->
+  <plugin>
+    <name value= "plugin.name"/>
+    <handle value= "Ensemble-B2"/>
+    <default-locale value="en_US" />
+    <description value= "plugin.description"/>
+    <version value= "1.0.11"/>
+    <requires>
+    	<bbversion value="9.1.0"/>
+    </requires>
+    <vendor>
+      <id value="ist"/>
+      <name value="Syracuse University iSchool"/>
+      <url value="http://ischool.syr.edu" />
+      <description value="plugin.vendor.description" />
+    </vendor>
+	  <http-actions>
+  		<config value="system/index.jsp" />
+	  </http-actions>
+
+    <content-handlers>
+      <!-- Ensemble Content Type Handler. -->
+      <content-handler> 
+        <name value="Ensemble Video"/>
+        <handle value= "resource/x-bb-ensemble-vid-mashup"/>
+        <http-actions>
+	        <create value="handler/search-vid.jsp"/>
+<!--  	    <modify value="execute/edit"/>
+	        <remove value="execute/remove"/>   -->
+        </http-actions>
+        <icons>
+	        <toolbar value="/images/handler_icon.gif"/>
+	        <listitem value="/images/handler_icon.gif"/>
+        </icons>
+        <types>
+            <type>
+                <action-type value="mashup"/>
+            </type>
+            <type>
+                <action-type value="image"/>
+            </type>            
+        </types>             
+      </content-handler>
+      <!-- Ensemble Web Destination Content Handler-->
+      <content-handler> 
+        <name value="Ensemble Web Destination"/>
+        <handle value= "resource/x-bb-ensemble-wd-mashup"/>
+        <http-actions>
+	        <create value="handler/web-dest.jsp"/>
+<!--        <modify value="execute/edit"/>
+	        <remove value="execute/remove"/> -->
+        </http-actions>
+        <icons>
+	        <toolbar value="/images/handler_icon.gif"/>
+	        <listitem value="/images/handler_icon.gif"/>
+        </icons>
+        <types>
+            <type>
+                <action-type value="mashup"/>
+            </type>
+            <type>
+                <action-type value="image"/>
+            </type>            
+        </types>             
+      </content-handler>
+
+    </content-handlers>
+
+    
+    <!-- Tools defined by this extension -->
+    <application-defs>
+      <application handle="Ensemble-B2" type="shared" use-ssl="false" name="EnsembleB2" can-allow-guest="true"  small-icon="" large-icon="">
+        <description>Application installed as part of the Ensemble Building Block</description>
+        <links>
+           <link> <!-- System Tool -->
+            <type value="system_tool"/>
+            <name value="Ensemble"/>
+            <url value="system/index.jsp" />
+            <description value="Administer the Ensemble Video Building Block" />
+            <icons>
+              <listitem value="images/ensemble.icon.gif"/>
+            </icons>
+          </link>       
+		  <link> <!--course Mashup Entry Point For Ensemble Video-->
+			   <type value="vtbe_mashup_course" />
+			   <name value="Ensemble Video" />
+			   <url value="vbte/search-vid.jsp?vtbe=true&amp;course_id=@X@course.pk_string@X@" />
+			   <description value="flickr.vtbe.navitem.description.course" />
+		 </link>       
+		  <link> <!--course Mashup Entry Point For Ensemble Web Destination-->
+			   <type value="vtbe_mashup_course" />
+			   <name value="Ensemble Web Destination" />
+			   <url value="vbte/web-dest.jsp?vtbe=true&amp;course_id=@X@course.pk_string@X@" />
+			   <description value="flickr.vtbe.navitem.description.course" />
+		 </link>       
+          
+        </links>
+      </application>
+    </application-defs>
+    
+    
+
+    <!-- code permissions required for proper operation -->
+    <permissions>
+      <permission type="persist" name="Content" actions="create,modify,delete"/>
+      <permission type="attribute" name="user.authinfo" actions="get,set"/>
+      <permission type="attribute" name="user.personalinfo" actions="get,set"/>
+  	  <permission name="suppressAccessChecks" type="java.lang.reflect.ReflectPermission"  />    
+	  <permission type="socket" name="*" actions="connect,resolve"/>  	
+	</permissions>
+  </plugin>
+
+</manifest>

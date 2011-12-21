@@ -1,0 +1,66 @@
+.ensemble-searchResult-itemContainer {
+  border-bottom: 1px solid #BBBBBB;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  position: relative;
+  min-height: 140px; _height: 140px;
+  word-wrap: break-word;
+}
+
+.ensemble-searchResult-itemContainer-noborder {
+  position: relative;
+  min-height: 100px; _height: 100px;
+  word-wrap: break-word;
+}
+
+.ensemble-searchResult-imageContainer {
+  position: absolute;
+  top: 0; left: 0;
+  text-align: center;
+  width: 150px;
+}
+
+.ensemble-searchResult-imageContainer img {
+  border: none;
+  padding: 5px;
+}
+
+.ensemble-searchResult-imageOptions {
+  width: 150px;  
+  border: 1px solid #BBBBBB;
+  border-right: none;
+}
+
+.ensemble-searchResult-button {
+  background-image: url( ../images/button.bg.gif);
+  background-position: center;
+  padding: 2px;
+  color: #333333;
+  text-align: center;
+  border-right: 1px solid #bbbbbb;
+}
+
+.ensemble-searchResult-button a, .ensemble-searchResult-button a:hover {
+  text-decoration: none;  
+  color: #333333;
+}
+
+.ensemble-searchResult-dataContainer {
+  margin: 0 0 10px 160px;
+}
+
+.ensemble-searchResult-metadata {
+  font-size: 11px;
+  line-height: 14px;
+  word-wrap: break-word;
+}  
+
+.ensemble-searchResult-dataContainer h3 {
+  font-size: 15px;
+  margin: 0 0 5px 0;
+}
+
+.ensembleMoreOptions, .ensembleLicenseDiv {
+  padding-top:10px;
+}
+
