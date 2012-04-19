@@ -18,6 +18,7 @@
 	String SERVER_NAME = "server-name";
 	String API_KEY = "api-key";
 	String SECRET_KEY = "secret-key";
+	String DOMAIN = "domain";
 
 	B2Context b2Context = new B2Context(request);
 	String cancelUrl = "index.jsp";
@@ -26,8 +27,9 @@
 	String serverUrl = b2Context.getSetting(SERVER_NAME);
 	String apiKey = b2Context.getSetting(API_KEY);
 	String secretKey = b2Context.getSetting(SECRET_KEY);
+	String domain = b2Context.getSetting(DOMAIN);
 	
-	EnsembleB2 eb2 = new EnsembleB2(serverUrl, apiKey, secretKey);
+	EnsembleB2 eb2 = new EnsembleB2(serverUrl, apiKey, secretKey, domain);
 	InstContentRepository wdr = eb2.getInstContentRepository();
 	wdr.fromSerializedXmlString(xmlString);
 		

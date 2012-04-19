@@ -21,20 +21,25 @@
 <%@ page isErrorPage="true" %>
 
 <bbData:context id="ctx">
-<bbNG:learningSystemPage ctxId="ctx">
+<%
+	boolean isVtbe = request.getParameter("vtbe") != null ? true : false;
+%>
+<bbNG:learningSystemPage ctxId="ctx" hideCourseMenu="<%=isVtbe %>" >
+
 <bbNG:cssFile href="../css/EnsembleB2.css"/>
 
 <%
 	String SHARED_WEB_DEST = "shared-web-destinations";
 	String SERVER_NAME = "server-name";
 	String API_KEY = "api-key";
+    String DOMAIN = "domain";
 	String SECRET_KEY = "secret-key";
 	String MY_MEDIA = "myMedia";
 	String SHARED_MEDIA= "sharedMedia";
 	String INST_CONTENT= "instContent";
 	B2Context b2Context = new B2Context(request);
 	String xmlInstContent = b2Context.getSetting(SHARED_WEB_DEST);
-	EnsembleB2 eb2 = new EnsembleB2(b2Context.getSetting(SERVER_NAME),b2Context.getSetting(API_KEY),  b2Context.getSetting(SECRET_KEY));
+	EnsembleB2 eb2 = new EnsembleB2(b2Context.getSetting(SERVER_NAME),b2Context.getSetting(API_KEY), b2Context.getSetting(SECRET_KEY), b2Context.getSetting(DOMAIN));
 	pageContext.setAttribute("bundle", b2Context.getResourceStrings());
 	String courseId = ctx.getCourseId().toString();  
 	String contentId = ctx.getContentId().toString();
@@ -45,11 +50,12 @@
 	Boolean isMedia = (searchSource.equalsIgnoreCase(MY_MEDIA));
 	Boolean isShared = (searchSource.equalsIgnoreCase(SHARED_MEDIA));
 	Boolean isInstContent = (searchSource.equalsIgnoreCase(INST_CONTENT));
-	String DEBUG = "";
+	String DEBUG = ""; //isVtbe? "U Used VBTE" : "U Used Content Handler";
 	// Sanitize the search text input replaceAll("[^A-Za-z0-9 ]", "") and replace " " with "+"
 	searchText = searchText!=null ? searchText.replaceAll("[^A-Za-z0-9 ]","") : "";	
 	String encodedSearchText = searchText!=null ? searchText.replaceAll(" ","+") : "";
 	String jQueryPath = b2Context.getPath() + "js/jquery.min.js";
+	String processUrl = isVtbe ? "vtbe-search-vid-process.jsp" : "search-vid-process.jsp";
 %>
 <bbNG:pageHeader instructions="Search Ensemble Video">
     <bbNG:pageTitleBar iconUrl="../images/powered.by.ensemble.gif" showTitleBar="true" title="Search for a video to add through this interface."/>
@@ -111,7 +117,7 @@
 		String content = "";
 		String preview = "";
 		for (Video v : vl) {	
-			content = eb2.getContentHtml(v.videoID);
+			content = eb2.getContentHtml(v.videoID, "");
 			//content = eb2.getServerUrl() + "/app/plugin/plugin.aspx?contentID=" + v.videoID + "&useIFrame=false&embed=true";
 			//preview =eb2.getServerUrl() + "/app/sites/preview.aspx?contentID=" + v.videoID; // Not used
 			
@@ -142,7 +148,7 @@
        <tr>
         <td class="ensemble-searchResult-button"> 
         <!-- links to search-vid-process.jsp -->
-         <a href="search-vid-process.jsp?video_id=<%=v.videoID %>&amp;title=<%=URLEncoder.encode(v.videoTitle,"UTF-8") %>&amp;content_id=<%=contentId %>&amp;course_id=<%=courseId %>&amp;http_ref=<%=ref %>">Select</a>
+         <a href="<%=processUrl %>?video_id=<%=v.videoID %>&amp;title=<%=URLEncoder.encode(v.videoTitle,"UTF-8") %>&amp;content_id=<%=contentId %>&amp;course_id=<%=courseId %>&amp;http_ref=<%=ref %>">Select</a>
         </td>
        </tr>
       </tbody></table>

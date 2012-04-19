@@ -10,6 +10,7 @@
   String SERVER_NAME = "server-name";
   String API_KEY = "api-key";
   String SECRET_KEY = "secret-key";
+  String DOMAIN = "domain";
   
   B2Context b2Context = new B2Context(request);
   String cancelUrl = "index.jsp";
@@ -18,10 +19,12 @@
     String servername = b2Context.getRequestParameter(SERVER_NAME, "").trim();
     String apikey = b2Context.getRequestParameter(API_KEY, "").trim();
     String secretkey = b2Context.getRequestParameter(SECRET_KEY, "").trim();
+    String domain = b2Context.getRequestParameter(DOMAIN, "").trim();
     
     b2Context.setSetting(SERVER_NAME, servername);
     b2Context.setSetting(API_KEY, apikey);
     b2Context.setSetting(SECRET_KEY, secretkey);
+    b2Context.setSetting(DOMAIN, domain);
     b2Context.persistSettings();
     response.sendRedirect(cancelUrl + "?inline_receipt_message=" +
        b2Context.getResourceString("receipt.success"));
@@ -48,6 +51,9 @@
       </bbNG:dataElement>
       <bbNG:dataElement isRequired="true" label="${bundle['page.system.admin.step1.secretkey.label']}">
         <bbNG:textElement id="secretKey" name="<%=SECRET_KEY%>" value="<%=b2Context.getSetting(SECRET_KEY)%>" helpText="${bundle['page.system.admin.step1.secretkey.instructions']}" size="50" minLength="1" />
+      </bbNG:dataElement>		
+      <bbNG:dataElement isRequired="false" label="${bundle['page.system.admin.step1.domain.label']}">
+        <bbNG:textElement id="domain" name="<%=DOMAIN%>" value="<%=b2Context.getSetting(DOMAIN)%>" helpText="${bundle['page.system.admin.step1.domain.instructions']}" size="50" minLength="0" />
       </bbNG:dataElement>		
     </bbNG:step>
     <bbNG:stepSubmit hideNumber="true" showCancelButton="true"  cancelUrl="${cancelUrl}"/>

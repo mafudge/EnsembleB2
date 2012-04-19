@@ -6,7 +6,7 @@
     <handle value= "Ensemble-B2"/>
     <default-locale value="en_US" />
     <description value= "plugin.description"/>
-    <version value= "1.0.11"/>
+    <version value= "1.0.12"/>
     <requires>
     	<bbversion value="9.1.0"/>
     </requires>
@@ -71,8 +71,8 @@
     
     <!-- Tools defined by this extension -->
     <application-defs>
-      <application handle="Ensemble-B2" type="shared" use-ssl="false" name="EnsembleB2" can-allow-guest="true"  small-icon="" large-icon="">
-        <description>Application installed as part of the Ensemble Building Block</description>
+      <application handle="Ensemble-B2" type="shared" use-ssl="false" name="EnsembleB2" can-allow-guest="true"  small-icon="" large-icon="/images/handler_icon.gif">
+        <description small-icon="/images/handler_icon.gif">Application installed as part of the Ensemble Building Block</description>
         <links>
            <link> <!-- System Tool -->
             <type value="system_tool"/>
@@ -86,16 +86,17 @@
 		  <link> <!--course Mashup Entry Point For Ensemble Video-->
 			   <type value="vtbe_mashup_course" />
 			   <name value="Ensemble Video" />
-			   <url value="vbte/search-vid.jsp?vtbe=true&amp;course_id=@X@course.pk_string@X@" />
-			   <description value="flickr.vtbe.navitem.description.course" />
-		 </link>       
-		  <link> <!--course Mashup Entry Point For Ensemble Web Destination-->
+			   <url value="handler/search-vid.jsp?vtbe=true&amp;course_id=@X@course.pk_string@X@" />
+			   <description value="Embed Ensemble Video" />
+		 <icons><listitem value="/images/handler_icon.gif"></listitem><toolbar value="/images/handler_icon.gif"></toolbar></icons></link>       
+<!--course Mashup Entry Point For Ensemble Web Destination
+		  <link> 
 			   <type value="vtbe_mashup_course" />
 			   <name value="Ensemble Web Destination" />
-			   <url value="vbte/web-dest.jsp?vtbe=true&amp;course_id=@X@course.pk_string@X@" />
+			   <url value="handler/vbte-web-dest.jsp?vtbe=true&amp;course_id=@X@course.pk_string@X@" />
 			   <description value="flickr.vtbe.navitem.description.course" />
 		 </link>       
-          
+          -->
         </links>
       </application>
     </application-defs>

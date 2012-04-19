@@ -7,6 +7,7 @@
 	String SERVER_NAME = "server-name";
 	String API_KEY = "api-key";
 	String SECRET_KEY = "secret-key";
+	String DOMAIN = "domain";
 
   B2Context b2Context = new B2Context(request);
   String cancelUrl = b2Context.getNavigationItem("admin_plugin_manage").getHref();
@@ -33,9 +34,11 @@
 	<bbNG:contentListItem title="${bundle['page.system.admin.step1.servername.label']}"><code><%=b2Context.getSetting(SERVER_NAME)%></code></bbNG:contentListItem>
 	<bbNG:contentListItem title="${bundle['page.system.admin.step1.apikey.label']}"><code><%=b2Context.getSetting(API_KEY)%></code></bbNG:contentListItem>
 	<bbNG:contentListItem title="${bundle['page.system.admin.step1.secretkey.label']}"><code><%=b2Context.getSetting(SECRET_KEY)%></code></bbNG:contentListItem>
+	<bbNG:contentListItem title="${bundle['page.system.admin.step1.domain.label']}"><code><%=b2Context.getSetting(DOMAIN)%></code></bbNG:contentListItem>
 </bbNG:contentList>
   <h3 class="steptitle">Test Configuration:</h3>
 <div class="contentList">
+ <!--  <a href="test-error.jsp">Test Error Page</a>-->
   <button class="genericButton" id="testConfiugration">Test</button>
   </div>
   <div id="testStatus" class="contentList"></div>

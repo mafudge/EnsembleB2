@@ -18,6 +18,7 @@ public class EnsembleB2 {
 	private String m_serverUrl;
 	private String m_apiKey;
 	private String m_secretKey;
+	private String m_domain;
 	private String m_secureApiBaseUrl;
 	private String m_simpleApiBaseUrl;
 	private VideoRepository m_vr;
@@ -26,7 +27,7 @@ public class EnsembleB2 {
 	private SimpleHttpClient m_http;
 
 	// This is the proper constructor going forward
-	public EnsembleB2(String serverUrl, String apiKey, String secretKey)
+	public EnsembleB2(String serverUrl, String apiKey, String secretKey, String domain)
 	{
 		m_vr = new VideoRepository();
 		m_ic = new InstContentRepository();
@@ -34,6 +35,7 @@ public class EnsembleB2 {
 		m_http= new SimpleHttpClient();
 		m_apiKey = apiKey;
 		m_secretKey = secretKey;
+		m_domain = domain;
 		m_serverUrl =  serverUrl.replaceAll("/$", "");
 		m_simpleApiBaseUrl = m_serverUrl + "/app/simpleAPI";
 		m_secureApiBaseUrl = m_serverUrl + "/blackBoardAPI/Service.svc/" + m_apiKey;
@@ -69,6 +71,7 @@ public class EnsembleB2 {
 	public String getServerUrl() { return m_serverUrl; }
 	public String getApiKey() { return m_apiKey; }
 	public String getSecretKey() { return m_secretKey; }
+	public String getDomain() { return m_domain; }
 	
 	
 	public List<Video> getVideosByUrl(String stringUrl) throws Exception
@@ -93,6 +96,7 @@ public class EnsembleB2 {
 		return (this.m_serverUrl + "/app/plugin/plugin.aspx");
 	}
 	
+	
 	public String getContentUrl(String contentId) throws Exception {
 		String requestUrl = this.buildPreviewUrl(contentId);
 		String hmac = HMacMD5Encoder.Encode(this.m_secretKey, requestUrl.toLowerCase());
@@ -106,10 +110,10 @@ public class EnsembleB2 {
 		return embedHtml;
 	}
 	
-	public String getContentHtml(String contentID) {
+	public String getContentHtml(String contentID, String thumbnail) {
 		String plugInUrl = this.getPluginUrl();
 		String embedHtml = "<div id=\"ensembleEmbeddedContent_" + contentID + "\" class=\"ensembleEmbeddedContent\" style=\"width: 320px; height: 320px;\">";
-		embedHtml += "<script type=\"text/javascript\" src=\"" + plugInUrl  + "?contentID=" + contentID;
+		embedHtml += thumbnail + "<script type=\"text/javascript\" src=\"" + plugInUrl  + "?contentID=" + contentID;
 		embedHtml += "&useIFrame=true&embed=true&displayTitle=false&startTime=0&autoPlay=false&hideControls=false&showCaptions=false&width=320&height=240\">";
 		embedHtml +="</script></div>";
 		
@@ -119,7 +123,7 @@ public class EnsembleB2 {
 
 	public List<WebDestination> getWebDestinations(String userName) throws Exception {
 		String result;
-		String requestUrl = this.buildRequestUrl("/webDestinations/user/", userName);
+		String requestUrl = this.buildRequestUrl("/webDestinations/user/", getUserWithDomain(userName));
 		String hmac = HMacMD5Encoder.Encode(this.m_secretKey, requestUrl.toLowerCase());
 		result = m_http.webGet(requestUrl + hmac);
 		if (result.length()>0) {
@@ -130,7 +134,7 @@ public class EnsembleB2 {
 
 	public List<Video> getMediaLibraryVideo(String searchText, String userName) throws Exception {
 		String result = "";
-		String requestUrl = this.buildRequestSearchUrl("/library/user/", userName, searchText);
+		String requestUrl = this.buildRequestSearchUrl("/library/user/", getUserWithDomain(userName), searchText);
 		String hmac = HMacMD5Encoder.Encode(this.m_secretKey, requestUrl.toLowerCase());
 		result = m_http.webGet(requestUrl + hmac);
 		if (result.length()>0) {
@@ -141,7 +145,7 @@ public class EnsembleB2 {
 	
 	public List<Video> getSharedLibraryVideo(String searchText, String userName) throws Exception {
 		String result = "";
-		String requestUrl = this.buildRequestSearchUrl("/sharedlibrary/user/", userName, searchText);
+		String requestUrl = this.buildRequestSearchUrl("/sharedlibrary/user/", getUserWithDomain(userName), searchText);
 		String hmac = HMacMD5Encoder.Encode(this.m_secretKey, requestUrl.toLowerCase());
 		result = m_http.webGet(requestUrl + hmac);
 		if (result.length() > 0) {
@@ -152,28 +156,34 @@ public class EnsembleB2 {
 	
 	public List<Video> getInstContentVideo(String searchText, String xmlInstContent) throws Exception {
 		List<Video> vl = new ArrayList<Video>();
-		InstContentRepository wdr = new InstContentRepository();
-		wdr.fromSerializedXmlString(xmlInstContent);
-		for (InstContentWebDestination w : wdr.getWebDestinations()) {
-			String wdUrl =  this.getWebDestinationHref(w.wdId);
-			if (searchText.length()> 0) { wdUrl += "?searchString=" +searchText; }
-			vl.addAll(this.getVideosByUrl(wdUrl));
+		if (xmlInstContent.length()> 0) {
+			InstContentRepository wdr = new InstContentRepository();
+			wdr.fromSerializedXmlString(xmlInstContent);
+			for (InstContentWebDestination w : wdr.getWebDestinations()) {
+				String wdUrl =  this.getWebDestinationHref(w.wdId);
+				if (searchText.length()> 0) { wdUrl += "?searchString=" +searchText; }
+				vl.addAll(this.getVideosByUrl(wdUrl));
+			}
 		}
 		return vl;
 	}
 
-	private String buildRequestSearchUrl(String command, String userName, String searchText) {
+	private String getUserWithDomain(String userName){
+		return this.m_domain.length() == 0 ? userName : userName + "@" + this.m_domain;
+	}
+
+	private String buildRequestSearchUrl(String command, String userNameWithDomain, String searchText) {
 		DateTime nowUtc = (new DateTime()).withZone(DateTimeZone.UTC);
 		String timeStamp = nowUtc.toString(DateTimeFormat.forPattern("yyyyMMddHHmmss"));
 		searchText = searchText.length() == 0 ? "!" : searchText;
-		String requestUrl = this.m_secureApiBaseUrl + command + userName + "?s=" + searchText + "&ts=" + timeStamp + "&hmac=";
+		String requestUrl = this.m_secureApiBaseUrl + command + userNameWithDomain + "?s=" + searchText + "&ts=" + timeStamp + "&hmac=";
 		return requestUrl;
 	}
 
-	private String buildRequestUrl(String command, String userName) {
+	private String buildRequestUrl(String command, String userNameWithDomain) {
 		DateTime nowUtc = (new DateTime()).withZone(DateTimeZone.UTC);
 		String timeStamp = nowUtc.toString(DateTimeFormat.forPattern("yyyyMMddHHmmss"));
-		String requestUrl = this.m_secureApiBaseUrl + command + userName + "?ts=" + timeStamp + "&hmac=";
+		String requestUrl = this.m_secureApiBaseUrl + command + userNameWithDomain + "?ts=" + timeStamp + "&hmac=";
 		return requestUrl;
 	}
 	

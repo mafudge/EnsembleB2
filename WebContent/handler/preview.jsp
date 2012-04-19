@@ -26,14 +26,15 @@
 	String SERVER_NAME = "server-name";
 	String API_KEY = "api-key";
 	String SECRET_KEY = "secret-key";
+    String DOMAIN = "domain";
 	String MY_MEDIA = "myMedia";
 	String SHARED_MEDIA= "sharedMedia";
 	String INST_CONTENT= "instContent";
 	B2Context b2Context = new B2Context(request);
-	EnsembleB2 eb2 = new EnsembleB2(b2Context.getSetting(SERVER_NAME),b2Context.getSetting(API_KEY),  b2Context.getSetting(SECRET_KEY));
+	EnsembleB2 eb2 = new EnsembleB2(b2Context.getSetting(SERVER_NAME),b2Context.getSetting(API_KEY), b2Context.getSetting(SECRET_KEY), b2Context.getSetting(DOMAIN));
 	pageContext.setAttribute("bundle", b2Context.getResourceStrings());
 	String contentId = request.getParameter("contentId");
-	String content = eb2.getContentHtml(contentId);
+	String content = eb2.getContentHtml(contentId,"");
 	out.println(content);
 %>
 </body>

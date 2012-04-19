@@ -26,8 +26,10 @@
 	String SERVER_NAME = "server-name";
 	String API_KEY = "api-key";
 	String SECRET_KEY = "secret-key";
+    String DOMAIN = "domain";
+	
 	B2Context b2Context = new B2Context(request);
-	EnsembleB2 eb2 = new EnsembleB2(b2Context.getSetting(SERVER_NAME),b2Context.getSetting(API_KEY),  b2Context.getSetting(SECRET_KEY));
+	EnsembleB2 eb2 = new EnsembleB2(b2Context.getSetting(SERVER_NAME),b2Context.getSetting(API_KEY), b2Context.getSetting(SECRET_KEY), b2Context.getSetting(DOMAIN));
 	String courseId = ctx.getCourseId().toString();  
 	String contentId = ctx.getContentId().toString();
 	String ref = request.getHeader("referer");
