@@ -76,7 +76,6 @@ public class EnsembleB2 {
 	
 	public List<Video> getVideosByUrl(String stringUrl) throws Exception
 	{
-		//String testUrl = "http://demo.ensemblevideo.com/app/simpleAPI/video/list.xml/G0bbuVN4HEGJKzr4QIBMSw";
 		String result = m_http.get(stringUrl);
 		if (result.length()>0) {
 			m_vr.fromRawXmlString(result);
@@ -92,34 +91,69 @@ public class EnsembleB2 {
 		return (this.m_simpleApiBaseUrl + "/video/list.xml/" + webDestinationId);
 	}
 	
+	// Pre-Ensemble 3.4
 	public String getPluginUrl() {
 		return (this.m_serverUrl + "/app/plugin/plugin.aspx");
 	}
 	
+	// Ensemble 3.4 and up
+	public String getEmbedPluginUrl() {
+		return (this.m_serverUrl + "/app/plugin/embed.aspx");
+		
+	}
 	
 	public String getContentUrl(String contentId) throws Exception {
 		String requestUrl = this.buildPreviewUrl(contentId);
 		String hmac = HMacMD5Encoder.Encode(this.m_secretKey, requestUrl.toLowerCase());
 		return (requestUrl + hmac);
 	}
-	
+		
 	public String getWebDestinationHtml(String webDestinationID) {
+		// Ensemble 3.4 and up
+		return getWebDestinationHtmlAsIFrame(webDestinationID);
+		// return getWebDestinationHtmlAsJavascript(webDestinationID);
+	}
+
+	// Ensemble pre 3.4
+	public String getWebDestinationHtmlAsJavascript(String webDestinationID) {
 		String plugInUrl = this.getPluginUrl();  		
 		String embedHtml = "<div id=\"ensembleContentContainer_" + webDestinationID + "\" class=\"ensembleContentContainer\" style=\"width: 99%; height: 1000px;\">";
 		embedHtml += "<script type=\"text/javascript\" src=\"" + plugInUrl + "?destinationID=" + webDestinationID + "&useIFrame=true\"></script></div>";
 		return embedHtml;
 	}
+
+	// Ensemble 3.4 and higher
+	public String getWebDestinationHtmlAsIFrame(String webDestinationID) {
+		String plugInUrl = this.getEmbedPluginUrl();  		
+		String embedHtml = "<iframe id=\"ensembleFrame_" + webDestinationID + "\" src=\"" + plugInUrl + "?DestinationID=" + webDestinationID + "\" ";
+		embedHtml += "frameborder=\"0\" style=\"width: 99%; height : 1000px;\" allowfullscreen></iframe>"; 
+		return embedHtml;
+	}
+
+	public String getContentHtml(String contentID, String thumbnail){
+		// Ensemble 3.4 and up
+		return getContentHtmlAsIFrame(contentID,thumbnail);
+		//return getContentHtmlAsJavascript(contentID, thumbnail);
+	}
 	
-	public String getContentHtml(String contentID, String thumbnail) {
+	// Ensemble pre 3.4
+	public String getContentHtmlAsJavascript(String contentID, String thumbnail) {
 		String plugInUrl = this.getPluginUrl();
 		String embedHtml = "<div id=\"ensembleEmbeddedContent_" + contentID + "\" class=\"ensembleEmbeddedContent\" style=\"width: 320px; height: 320px;\">";
 		embedHtml += thumbnail + "<script type=\"text/javascript\" src=\"" + plugInUrl  + "?contentID=" + contentID;
 		embedHtml += "&useIFrame=true&embed=true&displayTitle=false&startTime=0&autoPlay=false&hideControls=false&showCaptions=false&width=320&height=240\">";
 		embedHtml +="</script></div>";
-		
 		return embedHtml;
 	}
 
+	// Ensemble 3.4 and higher
+	public String getContentHtmlAsIFrame(String contentID, String thumbnail) {
+		String plugInUrl=this.getEmbedPluginUrl();
+		String embedHtml = "<iframe id=\"ensembleEmbeddedContent_" + contentID + "\" src=\"" + plugInUrl + "?ID=" + contentID;
+		embedHtml += "&displayTitle=false&startTime=0&autoPlay=false&hideControls=false&showCaptions=false&width=320&height=240\" frameborder=\"0\"";
+		embedHtml += "style=\"width: 320px;height:320px;\" allowfullscreen></iframe>";
+		return embedHtml;
+	}
 
 	public List<WebDestination> getWebDestinations(String userName) throws Exception {
 		String result;

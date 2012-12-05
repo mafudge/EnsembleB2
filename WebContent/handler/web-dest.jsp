@@ -67,7 +67,7 @@
 </bbNG:dataCollection>
 </bbNG:form>
 <% } else {%>
-<h3>There are no Ensemble Web Destinations enabled for <%=userName %>'s department.</h3>
+<h3>There are no Ensemble Web Destinations enabled for <%=userName %>'s library.</h3>
   <bbNG:okButton url="${ref}" />
 <% } %>
 </bbNG:learningSystemPage>

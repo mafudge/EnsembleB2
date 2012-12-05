@@ -63,7 +63,7 @@ public class SimpleHttpClient {
 		
 		 // Get hold of the response entity
 		 HttpEntity entity = response.getEntity();
-
+		 
 		 if (entity != null && statusCode == 200) {
 			 result = "";
 		     InputStream instream = entity.getContent();
@@ -96,8 +96,10 @@ public class SimpleHttpClient {
 		     // shut down the connection manager to ensure
 		     // immediate deallocation of all system resources
 		     httpclient.getConnectionManager().shutdown();
+		 } else {
+			 throw new RuntimeException(result);
 		 }
-		 
+			 
 		return result;
 	}
 	

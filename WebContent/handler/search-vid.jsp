@@ -44,7 +44,7 @@
 	String courseId = ctx.getCourseId().toString();  
 	String contentId = ctx.getContentId().toString();
 	String userName = ctx.getUser().getUserName();
-	String searchText = request.getParameter("searchText");	
+	String searchText = request.getParameter("searchText"); 
 	String ref  = request.getMethod().equalsIgnoreCase("POST") ? request.getParameter("http_ref")  : URLEncoder.encode(request.getHeader("referer"),"UTF-8");
 	String searchSource = (request.getParameterValues("searchSource")!= null ? request.getParameterValues("searchSource")[0] : MY_MEDIA );
 	Boolean isMedia = (searchSource.equalsIgnoreCase(MY_MEDIA));
@@ -52,8 +52,11 @@
 	Boolean isInstContent = (searchSource.equalsIgnoreCase(INST_CONTENT));
 	String DEBUG = ""; //isVtbe? "U Used VBTE" : "U Used Content Handler";
 	// Sanitize the search text input replaceAll("[^A-Za-z0-9 ]", "") and replace " " with "+"
-	searchText = searchText!=null ? searchText.replaceAll("[^A-Za-z0-9 ]","") : "";	
-	String encodedSearchText = searchText!=null ? searchText.replaceAll(" ","+") : "";
+	//searchText = searchText!=null ? searchText.replaceAll("[^A-Za-z0-9 ]","") : "";	
+	//String encodedSearchText = searchText!=null ? searchText.replaceAll(" ","+") : "";
+	String encodedSearchText = searchText != null ? URLEncoder.encode(searchText,"UTF-8"): ""; 
+	// need to encode again to pass the "%" symbol on the query string.
+	encodedSearchText = encodedSearchText.contains("%") ? URLEncoder.encode(encodedSearchText,"UTF-8") : encodedSearchText;
 	String jQueryPath = b2Context.getPath() + "js/jquery.min.js";
 	String processUrl = isVtbe ? "vtbe-search-vid-process.jsp" : "search-vid-process.jsp";
 %>

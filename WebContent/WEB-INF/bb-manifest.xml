@@ -6,7 +6,7 @@
     <handle value= "Ensemble-B2"/>
     <default-locale value="en_US" />
     <description value= "plugin.description"/>
-    <version value= "1.0.12"/>
+    <version value= "3.4.121204"/>
     <requires>
     	<bbversion value="9.1.0"/>
     </requires>
@@ -71,38 +71,33 @@
     
     <!-- Tools defined by this extension -->
     <application-defs>
-      <application handle="Ensemble-B2" type="shared" use-ssl="false" name="EnsembleB2" can-allow-guest="true"  small-icon="" large-icon="/images/handler_icon.gif">
+      <application handle="Ensemble-B2" type="shared" use-ssl="false" name="Ensemble Video (In Text Editor)" can-allow-guest="true"  small-icon="" large-icon="/images/handler_icon.gif" is-course-tool="true" is-group-tool="true" is-sys-tool="true" is-org-tool="true">
         <description small-icon="/images/handler_icon.gif">Application installed as part of the Ensemble Building Block</description>
         <links>
            <link> <!-- System Tool -->
             <type value="system_tool"/>
-            <name value="Ensemble"/>
+            <name value="Ensemble Settings"/>
             <url value="system/index.jsp" />
             <description value="Administer the Ensemble Video Building Block" />
             <icons>
               <listitem value="images/ensemble.icon.gif"/>
             </icons>
-          </link>       
+          </link>   
 		  <link> <!--course Mashup Entry Point For Ensemble Video-->
 			   <type value="vtbe_mashup_course" />
 			   <name value="Ensemble Video" />
 			   <url value="handler/search-vid.jsp?vtbe=true&amp;course_id=@X@course.pk_string@X@" />
 			   <description value="Embed Ensemble Video" />
-		 <icons><listitem value="/images/handler_icon.gif"></listitem><toolbar value="/images/handler_icon.gif"></toolbar></icons></link>       
-<!--course Mashup Entry Point For Ensemble Web Destination
-		  <link> 
-			   <type value="vtbe_mashup_course" />
-			   <name value="Ensemble Web Destination" />
-			   <url value="handler/vbte-web-dest.jsp?vtbe=true&amp;course_id=@X@course.pk_string@X@" />
-			   <description value="flickr.vtbe.navitem.description.course" />
+		 	   <icons>
+		 		 <listitem value="/images/handler_icon.gif"></listitem>
+		 		 <toolbar value="/images/handler_icon.gif"></toolbar>
+		 	   </icons>
 		 </link>       
-          -->
-        </links>
+		</links>
       </application>
     </application-defs>
     
     
-
     <!-- code permissions required for proper operation -->
     <permissions>
       <permission type="persist" name="Content" actions="create,modify,delete"/>

@@ -35,13 +35,12 @@
 	<bbNG:contentListItem title="${bundle['page.system.admin.step1.apikey.label']}"><code><%=b2Context.getSetting(API_KEY)%></code></bbNG:contentListItem>
 	<bbNG:contentListItem title="${bundle['page.system.admin.step1.secretkey.label']}"><code><%=b2Context.getSetting(SECRET_KEY)%></code></bbNG:contentListItem>
 	<bbNG:contentListItem title="${bundle['page.system.admin.step1.domain.label']}"><code><%=b2Context.getSetting(DOMAIN)%></code></bbNG:contentListItem>
+	<bbNG:contentListItem title="Test Your Configuration">
+		<button class="genericButton" id="testConfiguration">Test</button>
+ 		<span id="testStatus"></span>
+	</bbNG:contentListItem>
 </bbNG:contentList>
-  <h3 class="steptitle">Test Configuration:</h3>
-<div class="contentList">
- <!--  <a href="test-error.jsp">Test Error Page</a>-->
-  <button class="genericButton" id="testConfiugration">Test</button>
-  </div>
-  <div id="testStatus" class="contentList"></div>
+  
 	<bbNG:jsBlock>
    	<script type="text/javascript">
     	 jQuery.noConflict();
@@ -60,7 +59,7 @@
 	    	 var load_url = "test.jsp?url=<%=b2Context.getSetting(SERVER_NAME)%>&api=<%=b2Context.getSetting(API_KEY)%>&sec=<%=b2Context.getSetting(SECRET_KEY)%>";
 	    	 var ajax_load = "Testing... "; 
 
-       		jQuery("#testConfiugration").click(function() {
+       		jQuery("#testConfiguration").click(function() {
        			jQuery("#testStatus").html('');
     			jQuery("#testStatus").html(ajax_load).load(load_url);    			
     			return true;
@@ -68,6 +67,7 @@
      	});
    </script>
    </bbNG:jsBlock>
+
   <bbNG:okButton url="${cancelUrl}" />
   </div>
 </bbNG:genericPage>
