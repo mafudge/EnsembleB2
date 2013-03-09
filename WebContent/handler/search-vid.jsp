@@ -19,7 +19,6 @@
 <%@ taglib uri="/bbNG" prefix="bbNG"%>
 <%@ taglib uri="/bbData" prefix="bbData"%> 
 <%@ page isErrorPage="true" %>
-
 <bbData:context id="ctx">
 <%
 	boolean isVtbe = request.getParameter("vtbe") != null ? true : false;
@@ -27,6 +26,7 @@
 <bbNG:learningSystemPage ctxId="ctx" hideCourseMenu="<%=isVtbe %>" >
 
 <bbNG:cssFile href="../css/EnsembleB2.css"/>
+<bbNG:cssFile href="../css/jquery.fancybox.css" /> 
 
 <%
 	String SHARED_WEB_DEST = "shared-web-destinations";
@@ -38,6 +38,8 @@
 	String SHARED_MEDIA= "sharedMedia";
 	String INST_CONTENT= "instContent";
 	B2Context b2Context = new B2Context(request);
+	String jQueryPath = b2Context.getPath() + "js/jquery.min.js";
+	String fancyBoxPath = b2Context.getPath() + "js/jquery.fancybox.pack.js";
 	String xmlInstContent = b2Context.getSetting(SHARED_WEB_DEST);
 	EnsembleB2 eb2 = new EnsembleB2(b2Context.getSetting(SERVER_NAME),b2Context.getSetting(API_KEY), b2Context.getSetting(SECRET_KEY), b2Context.getSetting(DOMAIN));
 	pageContext.setAttribute("bundle", b2Context.getResourceStrings());
@@ -57,13 +59,13 @@
 	String encodedSearchText = searchText != null ? URLEncoder.encode(searchText,"UTF-8"): ""; 
 	// need to encode again to pass the "%" symbol on the query string.
 	encodedSearchText = encodedSearchText.contains("%") ? URLEncoder.encode(encodedSearchText,"UTF-8") : encodedSearchText;
-	String jQueryPath = b2Context.getPath() + "js/jquery.min.js";
 	String processUrl = isVtbe ? "vtbe-search-vid-process.jsp" : "search-vid-process.jsp";
 %>
+<bbNG:jsFile href="<%=jQueryPath %>"/> 
+<bbNG:jsFile href="<%=fancyBoxPath %>"/>   
 <bbNG:pageHeader instructions="Search Ensemble Video">
     <bbNG:pageTitleBar iconUrl="../images/powered.by.ensemble.gif" showTitleBar="true" title="Search for a video to add through this interface."/>
 </bbNG:pageHeader>
-<bbNG:jsFile href="<%=jQueryPath %>"/> <!--  Note: does not support absolute Url's -->  
 	<bbNG:jsBlock>
    	<script type="text/javascript">
     	 jQuery.noConflict();
@@ -78,6 +80,27 @@
        			//alert('wow you clicked me!');
     			return true;
 	     	});
+       		
+       		jQuery(".various").fancybox({
+                type: 'iframe',
+                scrolling: 'no',
+                maxWidth: 370,
+                maxHeight: 280,
+                fitToView: true,
+                width: '100%',
+                height: '100%',
+                autoSize: false,
+                autoResize: true,
+                autoCenter: true,
+                closeClick: false,
+                openEffect: 'none',
+                closeEffect: 'none',
+                helpers : {
+                    overlay : {
+                        css : { 'overflow' : 'hidden' }
+                    }
+                }
+            });
      	});
    </script>
    </bbNG:jsBlock>
@@ -125,7 +148,9 @@
 			//preview =eb2.getServerUrl() + "/app/sites/preview.aspx?contentID=" + v.videoID; // Not used
 			
 			// preview = eb2.getContentUrl(v.videoID);
-			preview = "preview.jsp?contentId=" + v.videoID;
+			// TODO: Test this for various Tweaks.... 
+			// eg.  displayTitle=false&useIFrame=false&embed=true
+			preview = "preview.jsp?contentId=" + v.videoID + "&displayTitle=false";
 	%>
 <div class="ensemble-searchResult-itemContainer">
     <div class="ensemble-searchResult-dataContainer">
@@ -145,7 +170,7 @@
       <table class="ensemble-searchResult-imageOptions" cellpadding="0" cellspacing="0">
        <tbody><tr>
         <td class="ensemble-searchResult-button">
-         <a class="lb" lb:options="{'contents':{'id':'<%=v.videoID %>','stripComments':true},'closeOnBodyClick':false}" href="<%=preview %>" title="<%=v.videoTitle %>">Preview</a>
+        <a class="various fancybox.iframe"  href="<%=preview %>" title="<%=v.videoTitle %>">Preview</a>
         </td>
        </tr>
        <tr>
@@ -156,11 +181,7 @@
        </tr>
       </tbody></table>
      </div>
-    </div>
-
-    	<!-- for lightbox -->
-	    <div id="<%=v.videoID %>"><!-- <div style="margin: 10px;"><iframe frameborder="0" width="380" height="320" style="border:none;" src="<%=preview %>"></iframe></div> --></div>
-         
+    </div>         
     </div>
 </div>   
 		<% }  // for each %>
