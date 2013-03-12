@@ -6,7 +6,7 @@
     <handle value= "Ensemble-B2"/>
     <default-locale value="en_US" />
     <description value= "plugin.description"/>
-    <version value= "3.4.121204"/>
+    <version value= "3.4.130308"/>
     <requires>
     	<bbversion value="9.1.0"/>
     </requires>
@@ -43,9 +43,9 @@
             </type>            
         </types>             
       </content-handler>
-      <!-- Ensemble Web Destination Content Handler-->
+      <!-- Ensemble Playlist Content Handler-->
       <content-handler> 
-        <name value="Ensemble Web Destination"/>
+        <name value="Ensemble Playlist"/>
         <handle value= "resource/x-bb-ensemble-wd-mashup"/>
         <http-actions>
 	        <create value="handler/web-dest.jsp"/>

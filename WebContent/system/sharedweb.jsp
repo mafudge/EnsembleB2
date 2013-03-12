@@ -72,10 +72,10 @@
 			<bbNG:listActionItem title="Delete" id="removeListItem" url="javascript:deleteSelectedWebDestinations()" /> 
 		</bbNG:listActionBar>           
           <bbNG:listCheckboxElement name="ckbox" value="<%=wd.wdId%>" />             
-          <bbNG:listElement label="Web Destination ID" name="wdId"> 
+          <bbNG:listElement label="Playlist ID" name="wdId"> 
             <a href="<%= eb2.getWebDestinationHref(wd.wdId) %>" target="new_<%=wd.wdId%>"><%=wd.wdId%></a> 
           </bbNG:listElement>           
-          <bbNG:listElement isRowHeader="true" label="Web Destination Name" name="wdName"> 
+          <bbNG:listElement isRowHeader="true" label="Playlist Name" name="wdName"> 
             <%=wd.wdName%>
           </bbNG:listElement> 
     </bbNG:inventoryList> 

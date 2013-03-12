@@ -1,6 +1,8 @@
 
 
 FIXED:
+3.4.130308 => Replaced lightbox.js with fancybox.js, which broke in BB learn 9.1 SP11. Changed web dest to playlist.
+3.4.121204 => Compatibility with Ensemble and 3.4 support for BB learn 9.1 Sp9 and up.
 1.0.11 => Fixed issue "Unexpected EOF in Prolog error" on institutional content with no data. Fixed SAX Parser error on bad API call. 
 1.0.10 => Fixed: plugin issue, institutional content not displaying issue, and better feedback on search progress.
 1.0.9 => Official 1st release 

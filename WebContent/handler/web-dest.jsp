@@ -44,7 +44,7 @@
 <bbNG:form action="web-dest-process.jsp" method="POST" id="id_searchForm" name="searchForm">
 <bbNG:dataCollection markUnsavedChanges="true" showSubmitButtons="true">
 <bbNG:step title="${bundle['page.handler.web-dest.step1.title']}" instructions="${bundle['page.handler.web-dest..step1.instructions']}">
-<h3>Ensemble Web Destinations for <%=userName %>:</h3>
+<h3>Ensemble Playlists for <%=userName %>:</h3>
 		<input type="hidden" value="<%=courseId %>" name="course_id" /> 
 		<input type="hidden" value="<%=contentId %>" name="content_id" />
 		<input type="hidden" value="<%=ref %>" name="http_ref" />
