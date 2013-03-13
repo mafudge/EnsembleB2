@@ -23,7 +23,7 @@
 	ContentCreator cc = new ContentCreator();
 	cc.createContent(title, embedHtml,courseId, contentId);
 
-    response.sendRedirect(returnUrl + "?inline_receipt_message=Content%20Added.");
+    response.sendRedirect(returnUrl); // + "&inline_receipt_message=Content%20Added.");
    
     
 %>
