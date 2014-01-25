@@ -6,7 +6,7 @@
     <handle value= "Ensemble-B2"/>
     <default-locale value="en_US" />
     <description value= "plugin.description"/>
-    <version value= "3.4.130313"/>
+    <version value= "3.4.140124"/>
     <requires>
     	<bbversion value="9.1.0"/>
     </requires>

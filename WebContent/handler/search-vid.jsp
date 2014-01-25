@@ -23,7 +23,7 @@
 <%
 	boolean isVtbe = request.getParameter("vtbe") != null ? true : false;
 %>
-<bbNG:learningSystemPage ctxId="ctx" hideCourseMenu="<%=isVtbe %>" >
+<bbNG:learningSystemPage ctxId="ctx2" hideCourseMenu="<%=isVtbe %>" >
 
 <bbNG:cssFile href="../css/EnsembleB2.css"/>
 <bbNG:cssFile href="../css/jquery.fancybox.css" /> 
@@ -47,11 +47,14 @@
 	String contentId = ctx.getContentId().toString();
 	String userName = ctx.getUser().getUserName();
 	String searchText = request.getParameter("searchText"); 
-	String ref  = request.getMethod().equalsIgnoreCase("POST") ? request.getParameter("http_ref")  : URLEncoder.encode(request.getHeader("referer"),"UTF-8");
+	String ref  = request.getMethod().equalsIgnoreCase("POST") ? 
+			request.getParameter("http_ref")!= null ? request.getParameter("http_ref") : ""   : 
+			request.getHeader("referer")!= null ? URLEncoder.encode(request.getHeader("referer"),"UTF-8") : "";
 	String searchSource = (request.getParameterValues("searchSource")!= null ? request.getParameterValues("searchSource")[0] : MY_MEDIA );
 	Boolean isMedia = (searchSource.equalsIgnoreCase(MY_MEDIA));
 	Boolean isShared = (searchSource.equalsIgnoreCase(SHARED_MEDIA));
 	Boolean isInstContent = (searchSource.equalsIgnoreCase(INST_CONTENT));
+	
 	String DEBUG = ""; //isVtbe? "U Used VBTE" : "U Used Content Handler";
 	// Sanitize the search text input replaceAll("[^A-Za-z0-9 ]", "") and replace " " with "+"
 	//searchText = searchText!=null ? searchText.replaceAll("[^A-Za-z0-9 ]","") : "";	
@@ -84,8 +87,8 @@
        		jQuery(".various").fancybox({
                 type: 'iframe',
                 scrolling: 'no',
-                maxWidth: 370,
-                maxHeight: 280,
+                maxWidth: 665,
+                maxHeight: 520,
                 fitToView: true,
                 width: '100%',
                 height: '100%',

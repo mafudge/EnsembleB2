@@ -150,8 +150,9 @@ public class EnsembleB2 {
 	public String getContentHtmlAsIFrame(String contentID, String thumbnail) {
 		String plugInUrl=this.getEmbedPluginUrl();
 		String embedHtml = "<iframe id=\"ensembleEmbeddedContent_" + contentID + "\" src=\"" + plugInUrl + "?ID=" + contentID;
-		embedHtml += "&displayTitle=false&startTime=0&autoPlay=false&hideControls=false&showCaptions=false&width=320&height=240\" frameborder=\"0\"";
-		embedHtml += "style=\"width: 320px;height:320px;\" allowfullscreen></iframe>";
+		embedHtml += "&displayTitle=false&startTime=0&autoPlay=false&hideControls=false&showCaptions=false&width=640&height=480\" frameborder=\"0\"";
+		embedHtml += "style=\"width: 665px;height:520px;\" width=\"665\" height=\"520\"";
+		embedHtml += " allowfullscreen></iframe>";
 		return embedHtml;
 	}
 

@@ -19,7 +19,7 @@
 <%@ page isErrorPage="true" %>
 
 <bbData:context id="ctx">
-<bbNG:learningSystemPage ctxId="ctx">
+<bbNG:learningSystemPage ctxId="ctx2">
 <bbNG:cssFile href="../css/EnsembleB2.css"/>
 
 <%
