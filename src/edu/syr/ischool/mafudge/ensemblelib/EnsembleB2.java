@@ -139,9 +139,9 @@ public class EnsembleB2 {
 	// Ensemble pre 3.4
 	public String getContentHtmlAsJavascript(String contentID, String thumbnail) {
 		String plugInUrl = this.getPluginUrl();
-		String embedHtml = "<div id=\"ensembleEmbeddedContent_" + contentID + "\" class=\"ensembleEmbeddedContent\" style=\"width: 320px; height: 320px;\">";
+		String embedHtml = "<div id=\"ensembleEmbeddedContent_" + contentID + "\" class=\"ensembleEmbeddedContent\" style=\"width: 640px; height: 416px;\">";
 		embedHtml += thumbnail + "<script type=\"text/javascript\" src=\"" + plugInUrl  + "?contentID=" + contentID;
-		embedHtml += "&useIFrame=true&embed=true&displayTitle=false&startTime=0&autoPlay=false&hideControls=false&showCaptions=false&width=320&height=240\">";
+		embedHtml += "&useIFrame=true&embed=true&displayTitle=false&startTime=0&autoPlay=false&hideControls=false&showCaptions=false&width=640&height=360\">";
 		embedHtml +="</script></div>";
 		return embedHtml;
 	}
@@ -150,8 +150,8 @@ public class EnsembleB2 {
 	public String getContentHtmlAsIFrame(String contentID, String thumbnail) {
 		String plugInUrl=this.getEmbedPluginUrl();
 		String embedHtml = "<iframe id=\"ensembleEmbeddedContent_" + contentID + "\" src=\"" + plugInUrl + "?ID=" + contentID;
-		embedHtml += "&displayTitle=false&startTime=0&autoPlay=false&hideControls=false&showCaptions=false&width=640&height=480\" frameborder=\"0\"";
-		embedHtml += "style=\"width: 665px;height:520px;\" width=\"665\" height=\"520\"";
+		embedHtml += "&displayTitle=false&startTime=0&autoPlay=false&hideControls=false&showCaptions=false&width=640&height=360\" frameborder=\"0\"";
+		embedHtml += "style=\"width: 640px;height:416px;\" width=\"640\" height=\"416\"";
 		embedHtml += " allowfullscreen></iframe>";
 		return embedHtml;
 	}
