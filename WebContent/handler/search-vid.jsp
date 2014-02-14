@@ -87,8 +87,8 @@
        		jQuery(".various").fancybox({
                 type: 'iframe',
                 scrolling: 'no',
-                maxWidth: 665,
-                maxHeight: 520,
+                maxWidth: 520,
+                maxHeight: 350,
                 fitToView: true,
                 width: '100%',
                 height: '100%',
